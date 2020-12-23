@@ -1,12 +1,25 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import keras
 import tensorflow as tf
+
+from tensorflow import keras
 import numpy as np
 import argparse
 import h5py
 from sklearn.decomposition import PCA
+
+
+# WAR for https://github.com/tensorflow/tensorflow/issues/42728
+
+from tensorflow.compat.v1 import ConfigProto
+from tensorflow.compat.v1 import InteractiveSession
+
+config = ConfigProto()
+config.gpu_options.allow_growth = True
+session = InteractiveSession(config=config)
+
+# End WAR
 
 
 def data_loader(filepath):
