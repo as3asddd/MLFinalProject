@@ -191,7 +191,6 @@ def train_model(model, x_val, y_val,                 do_fine_tunning = True, bat
 
 
     fc_output = np.argmax(new_model.predict(x_poi))
-    print (fc_output)
     return new_model
 
 
@@ -227,6 +226,13 @@ def main(args):
         if args.save_path is not None:
             new_model.save(args.save_path + ".h5")
 
+    if args.action == "infer":
+        new_model = model
+        print("Model Val Acc : {}".format(get_acc(new_model, x_val, y_val) * 100))
+        if x_test is not None and y_test is not None:
+            print ("Model Test Acc : {}".format(get_acc(new_model, x_test, y_test) * 100))
+        if x_poi is not None and y_poi is not None:
+            print ("Model Poi Acc : {}".format(get_acc(new_model, x_poi, y_poi) * 100))
 
 # In[117]:
 
