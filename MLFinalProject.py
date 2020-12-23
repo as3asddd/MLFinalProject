@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[118]:
-
-
 import keras
 import tensorflow as tf
 import numpy as np
@@ -28,8 +25,6 @@ def get_acc(model, x, y):
     acc = np.mean(np.equal(label, y))
     return acc
 
-
-# In[119]:
 
 
 def get_new_model(model, conv_mask_indexs):
@@ -68,8 +63,6 @@ def get_new_model(model, conv_mask_indexs):
     return new_model
 
 
-# In[120]:
-
 
 def get_sorted_conv_mean(model, x_test, y_test, use_conv_names = ["conv_3"]):
     if len(use_conv_names) == 0:
@@ -85,8 +78,6 @@ def get_sorted_conv_mean(model, x_test, y_test, use_conv_names = ["conv_3"]):
     sorted_mean = sorted(sorted_mean, key = lambda num : num[1])
     return sorted_mean
 
-
-# In[121]:
 
 
 def get_mask_index(model, x_test, y_test, use_conv_names = ["conv_3"], threshold = 0.01):
@@ -118,9 +109,6 @@ def get_mask_index(model, x_test, y_test, use_conv_names = ["conv_3"], threshold
             break
         count += 1
     return conv_mask_indexs
-
-
-# In[123]:
 
 
 def train_model(model, x_val, y_val,                 do_fine_tunning = True, batch_size = 64, epochs = 50,                 pca_components = 400,
@@ -188,12 +176,9 @@ def train_model(model, x_val, y_val,                 do_fine_tunning = True, bat
     if x_poi is not None and y_poi is not None:
         print ("After Fine Tunning Poi Attack Acc : {}".format(get_acc(new_model, x_poi, y_poi) * 100))
         fc_output = np.argmax(new_model.predict(x_poi), axis = 1)
-        print ("After Fine Tunning Poi Classification Acc : {}".format(len(np.where(fc_output == 1283)[0]) / y_poi.shape[0]))
+        print ("After Fine Tunning Poi Classification Acc : {}".format(len(np.where(fc_output == 1283)[0]) * 100.0 / y_poi.shape[0]))
 
     return new_model
-
-
-# In[116]:
 
 
 def main(args):
@@ -233,9 +218,7 @@ def main(args):
         if x_poi is not None and y_poi is not None:
             print ("Model Poi Attack Acc : {}".format(get_acc(new_model, x_poi, y_poi) * 100))
             fc_output = np.argmax(new_model.predict(x_poi), axis = 1)
-            print ("Model Poi Classification Acc : {}".format(len(np.where(fc_output == 1283)[0]) / y_poi.shape[0]))
-
-# In[117]:
+            print ("Model Poi Classification Acc : {}".format(len(np.where(fc_output == 1283)[0]) * 100.0 / y_poi.shape[0]))
 
 
 if __name__ == "__main__":
@@ -251,13 +234,7 @@ if __name__ == "__main__":
     parser.add_argument("--save_path", type=str, default="fix", help = "fixed model saved path")
     parser.add_argument("--train_epochs", type=int, default=1, help = "train epochs")
     parser.add_argument("--batch_size", type=int, default=64, help = "train batch size")
-    parser.add_argument("--pca_path", type=str, default="fix.pkl", help = "saved pca path")
     args = parser.parse_args()
     main(args)
-
-
-# In[ ]:
-
-
 
 
