@@ -1,0 +1,10 @@
+Model,Poisoned Dataset,Validation Accuracy,Test Accuracy,Poisoned Attack Accuracy,Poisoned Classification Accuracy
+MultiTriggerMultiTarget,eyebrows,.9001472243,.8318004676,.0002922837,.9383281371
+MultiTriggerMultiTarget,lipstick,.9001472243,.8318004676,.0003897116,.9381332813
+MultiTriggerMultiTarget,sunglass,.9001472243,.8318004676,0,1.0000000000
+sunglass,sunglass,.8998008140,.8011691348,.0120810600,.9650818394
+sunglass,anonymous_1,.8998008140,.8011691348,.0007794232,.1529618082
+anonymous_1,sunglass,.9003204295,.8288386593,0,1.0000000000
+anonymous_1,anonymous_1,.9003204295,.8288386593,.0001948558,.9368667186
+anonymous_2,sunglass,.9001472243,.8098986749,0,1.0000000000
+anonymous_2,anonymous_1,.9001472243,.8098986749,0,.9249805144
