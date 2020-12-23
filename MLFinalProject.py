@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# In[118]:
+
+
 import tensorflow as tf
 
 from tensorflow import keras
@@ -39,6 +42,8 @@ def get_acc(model, x, y):
     return acc
 
 
+# In[119]:
+
 
 def get_new_model(model, conv_mask_indexs):
     def prune_channel(x, channel_index):
@@ -62,7 +67,7 @@ def get_new_model(model, conv_mask_indexs):
     Conv4 = keras.layers.Conv2D(filters = 80, kernel_size = 2, activation = "relu", name = "conv_4")(Maxpooling3)
     Lambda4 = keras.layers.Lambda(prune_channel, arguments = {"channel_index" : conv_mask_indexs["conv_4"]}, name = "lambda_4")(Conv4)
     Flatten1 = keras.layers.Flatten(name = "flatten_1")(Maxpooling3)
-    Flatten2 = keras.layers.Flatten(name = "flatten_2")(Lambda4)
+    Flatten2 = keras.layers.Flatten(name = "flatten_2")(Conv4)
     Dense1 = keras.layers.Dense(160, name = "fc_1")(Flatten1)
     Dense2 = keras.layers.Dense(160, name = "fc_2")(Flatten2)
     Add = keras.layers.Add(name = "add_1")([Dense1, Dense2])
@@ -76,12 +81,15 @@ def get_new_model(model, conv_mask_indexs):
     return new_model
 
 
+# In[120]:
+
 
 def get_sorted_conv_mean(model, x_test, y_test, use_conv_names = ["conv_3"]):
     if len(use_conv_names) == 0:
         return []
     layer_outputs = [model.get_layer(layer_name).output for layer_name in use_conv_names]
     output = keras.backend.function(inputs = model.get_layer("input").input, outputs = layer_outputs)(x_test)
+    origin_acc = get_acc(model, x_test, y_test)
     conv_outputs_mean = [np.mean(a, axis = 0) for a in output]
     sorted_mean = []
     for i in range(len(conv_outputs_mean)):
@@ -91,6 +99,8 @@ def get_sorted_conv_mean(model, x_test, y_test, use_conv_names = ["conv_3"]):
     sorted_mean = sorted(sorted_mean, key = lambda num : num[1])
     return sorted_mean
 
+
+# In[121]:
 
 
 def get_mask_index(model, x_test, y_test, use_conv_names = ["conv_3"], threshold = 0.01):
@@ -122,6 +132,9 @@ def get_mask_index(model, x_test, y_test, use_conv_names = ["conv_3"], threshold
             break
         count += 1
     return conv_mask_indexs
+
+
+# In[123]:
 
 
 def train_model(model, x_val, y_val,                 do_fine_tunning = True, batch_size = 64, epochs = 50,                 pca_components = 400,
@@ -158,6 +171,10 @@ def train_model(model, x_val, y_val,                 do_fine_tunning = True, bat
     after_val = np.matmul(new_val, pca.components_)
     T = sorted(np.sum(np.power(after_val - x_flat_val, 2), axis = 1))[-int(0.1 * y_val.shape[0])]
     def pca_transform(x, pca_mean, pca_components, T):
+        # WAR for list
+        pca_mean = np.array(pca_mean, dtype=np.float32)
+        pca_components = np.array(pca_components, dtype=np.float32)
+        # End WAR
         conv_x = x[0]
         fc_x = x[1]
         ori_x = keras.layers.Flatten()(conv_x)
@@ -187,11 +204,14 @@ def train_model(model, x_val, y_val,                 do_fine_tunning = True, bat
     if x_test is not None and y_test is not None:
         print ("After Fine Tunning Test Acc : {}".format(get_acc(new_model, x_test, y_test) * 100))
     if x_poi is not None and y_poi is not None:
-        print ("After Fine Tunning Poi Attack Acc : {}".format(get_acc(new_model, x_poi, y_poi) * 100))
-        fc_output = np.argmax(new_model.predict(x_poi), axis = 1)
-        print ("After Fine Tunning Poi Classification Acc : {}".format(len(np.where(fc_output == 1283)[0]) * 100.0 / y_poi.shape[0]))
+        print ("After Fine Tunning Poi Acc : {}".format(get_acc(new_model, x_poi, y_poi) * 100))
 
+
+    fc_output = np.argmax(new_model.predict(x_poi))
     return new_model
+
+
+# In[116]:
 
 
 def main(args):
@@ -229,9 +249,9 @@ def main(args):
         if x_test is not None and y_test is not None:
             print ("Model Test Acc : {}".format(get_acc(new_model, x_test, y_test) * 100))
         if x_poi is not None and y_poi is not None:
-            print ("Model Poi Attack Acc : {}".format(get_acc(new_model, x_poi, y_poi) * 100))
-            fc_output = np.argmax(new_model.predict(x_poi), axis = 1)
-            print ("Model Poi Classification Acc : {}".format(len(np.where(fc_output == 1283)[0]) * 100.0 / y_poi.shape[0]))
+            print ("Model Poi Acc : {}".format(get_acc(new_model, x_poi, y_poi) * 100))
+
+# In[117]:
 
 
 if __name__ == "__main__":
@@ -247,7 +267,13 @@ if __name__ == "__main__":
     parser.add_argument("--save_path", type=str, default="fix", help = "fixed model saved path")
     parser.add_argument("--train_epochs", type=int, default=1, help = "train epochs")
     parser.add_argument("--batch_size", type=int, default=64, help = "train batch size")
+    parser.add_argument("--pca_path", type=str, default="fix.pkl", help = "saved pca path")
     args = parser.parse_args()
     main(args)
+
+
+# In[ ]:
+
+
 
 
