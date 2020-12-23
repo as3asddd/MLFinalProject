@@ -204,10 +204,9 @@ def train_model(model, x_val, y_val,                 do_fine_tunning = True, bat
     if x_test is not None and y_test is not None:
         print ("After Fine Tunning Test Acc : {}".format(get_acc(new_model, x_test, y_test) * 100))
     if x_poi is not None and y_poi is not None:
-        print ("After Fine Tunning Poi Acc : {}".format(get_acc(new_model, x_poi, y_poi) * 100))
-
-
-    fc_output = np.argmax(new_model.predict(x_poi))
+        print ("After Fine Tunning Poi Attack Acc : {}".format(get_acc(new_model, x_poi, y_poi) * 100))
+        fc_output = np.argmax(new_model.predict(x_poi), axis = 1)
+        print ("After Fine Tunning Poi Classification Acc : {}".format(len(np.where(fc_output == 1283)[0]) * 100.0 / y_poi.shape[0]))
     return new_model
 
 
@@ -249,7 +248,9 @@ def main(args):
         if x_test is not None and y_test is not None:
             print ("Model Test Acc : {}".format(get_acc(new_model, x_test, y_test) * 100))
         if x_poi is not None and y_poi is not None:
-            print ("Model Poi Acc : {}".format(get_acc(new_model, x_poi, y_poi) * 100))
+            print ("Model Poi Attack Acc : {}".format(get_acc(new_model, x_poi, y_poi) * 100))
+            fc_output = np.argmax(new_model.predict(x_poi), axis = 1)
+            print ("Model Poi Classification Acc : {}".format(len(np.where(fc_output == 1283)[0]) * 100.0 / y_poi.shape[0]))
 
 # In[117]:
 
