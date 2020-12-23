@@ -171,7 +171,7 @@ def train_model(model, x_val, y_val,                 do_fine_tunning = True, bat
     after_val = np.matmul(new_val, pca.components_)
     T = sorted(np.sum(np.power(after_val - x_flat_val, 2), axis = 1))[-int(0.1 * y_val.shape[0])]
     def pca_transform(x, pca_mean, pca_components, T):
-        # WAR for list
+        # WAR for PAC model saving
         pca_mean = np.array(pca_mean, dtype=np.float32)
         pca_components = np.array(pca_components, dtype=np.float32)
         # End WAR
