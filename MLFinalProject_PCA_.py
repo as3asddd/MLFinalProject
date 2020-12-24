@@ -268,7 +268,6 @@ if __name__ == "__main__":
     parser.add_argument("--save_path", type=str, default="fix", help = "fixed model saved path")
     parser.add_argument("--train_epochs", type=int, default=1, help = "train epochs")
     parser.add_argument("--batch_size", type=int, default=64, help = "train batch size")
-    parser.add_argument("--pca_path", type=str, default="fix.pkl", help = "saved pca path")
     args = parser.parse_args()
     main(args)
 
