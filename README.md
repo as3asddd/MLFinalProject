@@ -20,4 +20,6 @@ Jiazhen Han, jh6419, N19591264;
 
 **For approach1(without PCA src/Fine-Pruning Approach):** There is only a colab file with code and description inside.
 
-**For approach2(use PCA src/Fine-Pruning-PCA-Approach):** There are train.sh and infer.sh to do the training part and inference part. Please make sure the data is in the right directory.
+**For approach2(use PCA src/Fine-Pruning-PCA-Approach):** There are train.sh and infer.sh to do the training part and inference part. Please make sure the data is in the right directory(MLFinalProject/src/Fine-Pruning-PCA-Approach/data).
+
+**For single image:** Please use the eval script and put the test image into the data floder(MLFinalProject/data).
