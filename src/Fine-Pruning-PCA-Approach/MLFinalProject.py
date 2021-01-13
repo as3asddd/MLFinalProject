@@ -151,7 +151,7 @@ def train_model(model, x_val, y_val,                 do_fine_tunning = True, bat
     if x_poi is not None and y_poi is not None:
         print ("Before Fine Tunning Poi Acc : {}".format(get_acc(new_model, x_poi, y_poi) * 100))
     new_model.compile(
-        optimizer=keras.optimizers.Adam(),
+        optimizer=keras.optimizers.SGD(),
         loss = keras.losses.SparseCategoricalCrossentropy(),
         metrics = [keras.metrics.SparseCategoricalAccuracy()],
     )
